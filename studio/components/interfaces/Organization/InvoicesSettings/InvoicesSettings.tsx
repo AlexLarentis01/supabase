@@ -7,6 +7,7 @@ import { API_URL } from 'lib/constants'
 import { get, head } from 'lib/common/fetch'
 import Table from 'components/to-be-cleaned/Table'
 import NoPermission from 'components/ui/NoPermission'
+import InvoiceStatusBadge from 'components/interfaces/Billing/InvoiceStatusBadge'
 
 const PAGE_LIMIT = 10
 
@@ -96,6 +97,9 @@ const InvoicesSettings = () => {
             <Table.th key="header-date">Date</Table.th>,
             <Table.th key="header-amount">Amount due</Table.th>,
             <Table.th key="header-invoice">Invoice number</Table.th>,
+            <Table.th key="header-invoice" className="flex items-center">
+              Status
+            </Table.th>,
             <Table.th key="header-download" className="text-right"></Table.th>,
           ]}
           body={
@@ -124,8 +128,23 @@ const InvoicesSettings = () => {
                       <Table.td>
                         <p>{x.number}</p>
                       </Table.td>
+                      <Table.td>
+                        <InvoiceStatusBadge status={x.status} />
+                      </Table.td>
                       <Table.td className="align-right">
                         <div className="flex items-center justify-end space-x-2">
+                          {['uncollectible', 'open'].includes(x.status) && (
+                            <Button
+                              as="a"
+                              // @ts-ignore
+                              href={`https://redirect.revops.supabase.com/pay-invoice/${x.id}`}
+                              target="_blank"
+                              rel="noreferrer noopener"
+                            >
+                              Pay Now
+                            </Button>
+                          )}
+
                           <Button
                             type="outline"
                             icon={<IconDownload />}
@@ -137,7 +156,7 @@ const InvoicesSettings = () => {
                   )
                 })}
                 <Table.tr key="navigation">
-                  <Table.td colSpan={5}>
+                  <Table.td colSpan={6}>
                     <div className="flex items-center justify-between">
                       <p className="text-sm opacity-50">
                         Showing {offset + 1} to {offset + invoices.length} out of {count} invoices
