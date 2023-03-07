@@ -21,7 +21,7 @@ export const invoiceStatusMapping: Record<string, { label: string; badgeColor: s
   },
 
   // We do not want to overcomplicate it for the user, so we'll treat uncollectible/open the same from a user perspective
-  // it's an oustanding invoice
+  // it's an outstanding invoice
   uncollectible: {
     label: 'Outstanding',
     badgeColor: 'red',
